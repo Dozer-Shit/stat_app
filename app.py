@@ -54,7 +54,8 @@ def periodic_check():
 
 @app.route('/')
 def index():
-    return "Welcome to the status check application!\nhttp://localhost:8080/status"
+    return ("Welcome to the status check application!<br>"
+            "To view the status go to <a href='/status'>http://localhost:8080/status</a>")
 
 
 @app.route('/status')
