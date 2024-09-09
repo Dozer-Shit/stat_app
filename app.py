@@ -1,5 +1,7 @@
-import time
+from flask import Flask, jsonify
 import requests
+
+app = Flask(__name__)
 
 
 def check_site_status(url):
@@ -9,15 +11,24 @@ def check_site_status(url):
     try:
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
-            print(f"Site {url} is UP!")
+            return {"status": "UP", "code": response.status_code}
         else:
-            print(f"Site {url} returned status code: {response.status_code}")
+            return {"status": "DOWN", "code": response.status_code}
     except requests.exceptions.RequestException as e:
-        print(f"Error checking {url}: {e}")
+        return {"status": "ERROR", "message": str(e)}
+
+
+@app.route('/')
+def index():
+    return "Welcome to the status check application!"
+
+
+@app.route('/status')
+def status():
+    site = "https://okulik.by"
+    result = check_site_status(site)
+    return jsonify(result)
 
 
 if __name__ == "__main__":
-    site = "https://okulik.by"
-    while True:
-        check_site_status(site)
-        time.sleep(10)
+    app.run(host="0.0.0.0", port=8080)
