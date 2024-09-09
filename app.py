@@ -48,8 +48,8 @@ def periodic_check():
         site_status.update(result)
         site_status["last_checked"] = time.strftime("%Y-%m-%d %H:%M:%S")
         site_status["check_count"] += 1
-        print(f"Checked site status: {site_status}")  # Вывод в консоль для отладки
-        time.sleep(5)  # Ждём 5 секунд перед следующей проверкой
+        print(f"Checked site status: {site_status}")
+        time.sleep(5)
 
 
 @app.route('/')
@@ -63,10 +63,8 @@ def status():
 
 
 if __name__ == "__main__":
-    # Запускаем фоновую задачу для периодической проверки статуса сайта
     checker_thread = threading.Thread(target=periodic_check)
-    checker_thread.daemon = True  # Позволяет завершить поток при завершении основного приложения
+    checker_thread.daemon = True
     checker_thread.start()
 
-    # Запускаем Flask-сервер
     app.run(host="0.0.0.0", port=8080)
